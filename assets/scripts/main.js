@@ -57,37 +57,26 @@ function initializeServiceWorker() {
  * @returns {Array<Object>} An array of recipes found in localStorage
  */
 async function getRecipes() {
-  // A1. Check localStorage first
   const stored = localStorage.getItem('recipes');
   if (stored) {
     return JSON.parse(stored);
   }
 
-  // A2. Create an empty array to hold fetched recipes
   const recipes = [];
 
-  // A3. Return a Promise that wraps all our async work
   return new Promise(async (resolve, reject) => {
     try {
-      // A4. Loop through each URL in the RECIPE_URLS array
       for (const url of RECIPE_URLS) {
-        // A6. Fetch the URL
         const response = await fetch(url);
-        // A7. Parse out the JSON
         const data = await response.json();
-        // A8. Add it to our recipes array
         recipes.push(data);
       }
 
-      // A9. All done — save to localStorage
       saveRecipesToStorage(recipes);
 
-      // A9 (cont’d). Resolve the Promise with our full array
       resolve(recipes);
     } catch (err) {
-      // A10. Log any errors
       console.error(err);
-      // A11. Reject the Promise so callers can handle errors
       reject(err);
     }
   });
